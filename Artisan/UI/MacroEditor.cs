@@ -111,28 +111,33 @@ namespace Artisan.UI
                 if (ImGui.Button("Replace Touch Combo"))
                 {
                     Skills checkNext = Skills.None;
+                    int count = 0;
                     for (int i = 0; i < SelectedMacro.Steps.Count; i++)
                     {
                         if (SelectedMacro.Steps[i].Action == Skills.BasicTouch)
                         {
                             SelectedMacro.Steps[i].Action = Skills.TouchCombo;
                             checkNext = Skills.StandardTouch;
+                            count++;
                             continue;
                         }
                         else if (checkNext == Skills.StandardTouch && SelectedMacro.Steps[i].Action == Skills.StandardTouch)
                         {
                             SelectedMacro.Steps[i].Action = Skills.TouchCombo;
                             checkNext = Skills.AdvancedTouch;
+                            count++;
                             continue;
                         }
                         else if (checkNext == Skills.AdvancedTouch && SelectedMacro.Steps[i].Action == Skills.AdvancedTouch)
                         {
                             SelectedMacro.Steps[i].Action = Skills.TouchCombo;
+                            count++;
                         }
 
                         checkNext = Skills.None;
                     }
                     P.Config.Save();
+                    Notify.Success($"Replaced {count} actions with Touch Combo.");
                 }
 
                 ImGui.SameLine();
