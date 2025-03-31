@@ -107,6 +107,33 @@ namespace Artisan.UI
                     _rawMacro = string.Join("\r\n", SelectedMacro.Steps.Select(x => $"{x.Action.NameOfAction()}"));
                     Raweditor = !Raweditor;
                 }
+                ImGui.SameLine();
+                if (ImGui.Button("Replace Touch Combo"))
+                {
+                    Skills checkNext = Skills.None;
+                    for (int i = 0; i < SelectedMacro.Steps.Count; i++)
+                    {
+                        if (SelectedMacro.Steps[i].Action == Skills.BasicTouch)
+                        {
+                            SelectedMacro.Steps[i].Action = Skills.TouchCombo;
+                            checkNext = Skills.StandardTouch;
+                            continue;
+                        }
+                        else if (checkNext == Skills.StandardTouch && SelectedMacro.Steps[i].Action == Skills.StandardTouch)
+                        {
+                            SelectedMacro.Steps[i].Action = Skills.TouchCombo;
+                            checkNext = Skills.AdvancedTouch;
+                            continue;
+                        }
+                        else if (checkNext == Skills.AdvancedTouch && SelectedMacro.Steps[i].Action == Skills.AdvancedTouch)
+                        {
+                            SelectedMacro.Steps[i].Action = Skills.TouchCombo;
+                        }
+
+                        checkNext = Skills.None;
+                    }
+                    P.Config.Save();
+                }
 
                 ImGui.SameLine();
                 var exportButton = ImGuiHelpers.GetButtonSize("Export Macro");
